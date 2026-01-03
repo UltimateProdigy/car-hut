@@ -10,12 +10,14 @@ import { Button } from "@/components/ui/button";
 //   NavigationMenuTrigger,
 // } from "@/components/ui/navigation-menu";
 import { Icon } from "./icon";
+import { routes } from "@/lib/routes";
+import { Link } from "react-router-dom";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="absolute top-0 left-0 right-0 z-50 bg-transparent">
+    <nav className="absolute top-0 left-0 right-0 z-50 bg-gray-500">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-6">
@@ -27,12 +29,12 @@ export default function Navbar() {
           </div>
 
           <div className="hidden lg:flex items-center gap-1 text-white">
-            <NavItem label="Home" hasDropdown />
-            <NavItem label="Listings" hasDropdown />
-            <NavItem label="Blog" hasDropdown />
-            <NavItem label="Pages" hasDropdown />
-            <NavItem label="About" />
-            <NavItem label="Contact" />
+            <NavItem label="Home" to={routes.index} />
+            <NavItem label="Listings" to={routes.product.index} />
+            <NavItem label="Blog" to="" />
+            <NavItem label="Pages" to="" />
+            <NavItem label="About" to="" />
+            <NavItem label="Contact" to="" />
           </div>
 
           <div className="flex items-center gap-3">
@@ -100,17 +102,22 @@ export default function Navbar() {
 function NavItem({
   label,
   hasDropdown = false,
+  to,
 }: {
   label: string;
   hasDropdown?: boolean;
+  to: string;
 }) {
   return (
-    <button className="px-4 py-2 text-sm font-medium hover:text-gray-200 transition-colors flex items-center gap-1 group">
+    <Link
+      to={to}
+      className="px-4 py-2 text-sm font-medium hover:text-gray-200 transition-colors flex items-center gap-1 group"
+    >
       {label}
       {hasDropdown && (
         <ChevronDown className="w-4 h-4 group-hover:translate-y-0.5 transition-transform" />
       )}
-    </button>
+    </Link>
   );
 }
 

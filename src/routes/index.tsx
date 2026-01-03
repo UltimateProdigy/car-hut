@@ -14,6 +14,7 @@ const Dashboard = lazy(() => import("../pages/dashboard"));
 const Register = lazy(() => import("../pages/auth/register"));
 const Login = lazy(() => import("../pages/auth/login"));
 const Cars = lazy(() => import("../pages/cars"));
+const Products = lazy(() => import("../pages/product"));
 const Profile = lazy(() => import("../pages/profile"));
 
 const carhutRoutesConfig: RouteConfig[] = [
@@ -33,6 +34,10 @@ const carhutRoutesConfig: RouteConfig[] = [
     path: routes.cars.index,
     element: <Cars />,
     protected: true,
+  },
+  {
+    path: routes.product.index,
+    element: <Products />,
   },
   {
     path: routes.profile.index,
