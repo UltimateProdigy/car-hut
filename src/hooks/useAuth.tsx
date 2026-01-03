@@ -45,7 +45,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     removeAccessToken();
     setUser(null);
     setToken(null);
-    // Clear all React Query cache on logout
     queryClient.clear();
     setLoading(false);
   };
