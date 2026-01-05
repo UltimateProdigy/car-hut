@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
-const ProductDetailsPage = ({ productId, onBack }: any) => {
+const ProductDetailsPage = ({ onBack }: any) => {
   const [currentImage, setCurrentImage] = useState(0);
   const [bidAmount, setBidAmount] = useState("");
   const [timeLeft, setTimeLeft] = useState({
