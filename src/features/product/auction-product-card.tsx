@@ -9,29 +9,62 @@ import {
   Users,
 } from "lucide-react";
 
-export const AuctionProductCard = ({
+interface AuctionProductCardProps {
+  id: string;
+  image_url: string | null;
+  name: string;
+  description: string;
+  mileage: number;
+  fuel_type: string;
+  transmission: string;
+  current_bid: number;
+  _count: {
+    bids: number;
+  };
+  auction_end_date: string;
+  badge?: string;
+  badgeColor?: "green" | "red" | "blue";
+  onViewDetails: (id: string) => void;
+}
+
+export const AuctionProductCard: React.FC<AuctionProductCardProps> = ({
   id,
-  image,
-  title,
-  subtitle,
+  image_url,
+  name,
+  description,
   mileage,
-  fuelType,
+  fuel_type,
   transmission,
-  currentBid,
-  totalBids,
-  timeLeft,
+  current_bid,
+  _count,
+  auction_end_date,
   badge,
   badgeColor = "green",
   onViewDetails,
-}: any) => {
+}) => {
+  const timeLeft = () => {
+    const endDate = new Date(auction_end_date);
+    const now = new Date();
+    const difference = endDate.getTime() - now.getTime();
+    const hours = Math.floor(
+      (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+    );
+    const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+    return `${hours}h ${minutes}m`;
+  };
+
   return (
     <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
       <div
         className="relative h-48 bg-gray-200 cursor-pointer"
         onClick={() => onViewDetails(id)}
       >
-        {image ? (
-          <img src={image} alt={title} className="w-full h-full object-cover" />
+        {image_url ? (
+          <img
+            src={image_url}
+            alt={name}
+            className="w-full h-full object-cover"
+          />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-gray-400">
             <span className="text-sm">Image Placeholder</span>
@@ -58,17 +91,17 @@ export const AuctionProductCard = ({
       </div>
 
       <div className="p-5">
-        <h3 className="text-lg font-semibold text-gray-900 mb-1">{title}</h3>
-        <p className="text-sm text-gray-500 mb-4 truncate">{subtitle}</p>
+        <h3 className="text-lg font-semibold text-gray-900 mb-1">{name}</h3>
+        <p className="text-sm text-gray-500 mb-4 truncate">{description}</p>
 
         <div className="flex items-center justify-between mb-5 pb-5 border-b border-gray-100">
           <div className="flex flex-col items-center">
             <Gauge className="w-5 h-5 text-gray-400 mb-1" />
-            <span className="text-xs text-gray-600">{mileage}</span>
+            <span className="text-xs text-gray-600">{mileage} Miles</span>
           </div>
           <div className="flex flex-col items-center">
             <Fuel className="w-5 h-5 text-gray-400 mb-1" />
-            <span className="text-xs text-gray-600">{fuelType}</span>
+            <span className="text-xs text-gray-600">{fuel_type}</span>
           </div>
           <div className="flex flex-col items-center">
             <Settings className="w-5 h-5 text-gray-400 mb-1" />
@@ -83,7 +116,7 @@ export const AuctionProductCard = ({
               Current Bid
             </span>
             <span className="font-bold text-lg text-gray-900">
-              ${currentBid.toLocaleString()}
+              ${current_bid.toLocaleString()}
             </span>
           </div>
           <div className="flex items-center justify-between text-sm">
@@ -91,14 +124,14 @@ export const AuctionProductCard = ({
               <Users className="w-4 h-4" />
               Total Bids
             </span>
-            <span className="font-semibold text-gray-900">{totalBids}</span>
+            <span className="font-semibold text-gray-900">{_count.bids}</span>
           </div>
           <div className="flex items-center justify-between text-sm">
             <span className="text-gray-600 flex items-center gap-1">
               <Clock className="w-4 h-4" />
               Time Left
             </span>
-            <span className="font-semibold text-red-600">{timeLeft}</span>
+            <span className="font-semibold text-red-600">{timeLeft()}</span>
           </div>
         </div>
 

@@ -1,13 +1,10 @@
 import type { IProductCard } from "@/lib/types";
 import { Bookmark, Gauge, Fuel, Settings, ArrowUpRight } from "lucide-react";
-import toyotaImg from "@/assets/images/toyotta.svg"
-import tcrossImg from "@/assets/images/t-cross.svg"
-import cclassImg from "@/assets/images/c-class.svg"
-import fordImg from "@/assets/images/ford.svg"
-import glcImg from "@/assets/images/glc.svg"
-import audiImg from "@/assets/images/audi.svg"
-import corollaImg from "@/assets/images/corolla.svg"
-import explorerImg from "@/assets/images/explorer.svg"
+
+import { useCars } from "@/api/car";
+import Loader from "@/components/loader";
+import { useNavigate } from "react-router-dom";
+import { routes } from "@/lib/routes";
 
 const ProductCard = ({
   image,
@@ -18,6 +15,7 @@ const ProductCard = ({
   transmission,
   price,
   badge,
+  onViewDetails,
   badgeColor = "green",
 }: IProductCard) => {
   return (
@@ -69,7 +67,10 @@ const ProductCard = ({
           <div className="text-2xl font-bold text-gray-900">
             ${price.toLocaleString()}
           </div>
-          <button className="flex items-center gap-1 text-blue-600 font-light text-sm hover:text-blue-700 transition-colors">
+          <button
+            onClick={onViewDetails}
+            className="flex items-center gap-1 text-blue-600 font-light text-sm hover:text-blue-700 transition-colors cursor-pointer"
+          >
             View Details
             <ArrowUpRight className="w-4 h-4" />
           </button>
@@ -80,86 +81,12 @@ const ProductCard = ({
 };
 
 const SUVProductGrid = () => {
-  const products = [
-    {
-      title: "Toyota Camry New",
-      subtitle: "3.5 D5 PowerPulse Momentum 5dr AW...",
-      mileage: "20 Miles",
-      fuelType: "Petrol",
-      transmission: "Automatic",
-      price: 40000,
-      image: toyotaImg,
-    },
-    {
-      title: "T-Cross – 2023",
-      subtitle: "4.0 D5 PowerPulse Momentum 5dr AW...",
-      mileage: "15 Miles",
-      fuelType: "Petrol",
-      transmission: "CVT",
-      price: 15000,
-      image: tcrossImg,
-    },
-    {
-      title: "C-Class – 2023",
-      subtitle: "4.0 D5 PowerPulse Momentum 5dr AW...",
-      mileage: "50 Miles",
-      fuelType: "Petrol",
-      transmission: "Automatic",
-      price: 150000,
-      image: cclassImg,
-    },
-    {
-      title: "Ford Transit – 2021",
-      subtitle: "4.0 D5 PowerPulse Momentum 5dr AW...",
-      mileage: "2500 Miles",
-      fuelType: "Diesel",
-      transmission: "Manual",
-      price: 22000,
-      badge: "Great Price",
-      badgeColor: "green",
-      image: fordImg,
-    },
-    {
-      title: "New GLC – 2023",
-      subtitle: "4.0 D5 PowerPulse Momentum 5dr AW...",
-      mileage: "50 Miles",
-      fuelType: "Petrol",
-      transmission: "Automatic",
-      price: 95000,
-      badge: "Low Mileage",
-      badgeColor: "blue",
-      image: glcImg,
-    },
-    {
-      title: "Audi A6 3.5 – New",
-      subtitle: "3.5 D5 PowerPulse Momentum 5dr AW...",
-      mileage: "100 Miles",
-      fuelType: "Petrol",
-      transmission: "Automatic",
-      price: 58000,
-      image: audiImg,
-    },
-    {
-      title: "Corolla Altis – 2023",
-      subtitle: "3.5 D5 PowerPulse Momentum 5dr AW...",
-      mileage: "15000 Miles",
-      fuelType: "Petrol",
-      transmission: "CVT",
-      price: 45000,
-      image: corollaImg,
-    },
-    {
-      title: "Ford Explorer 2023",
-      subtitle: "3.5 D5 PowerPulse Momentum 5dr AW...",
-      mileage: "10 Miles",
-      fuelType: "Diesel",
-      transmission: "CVT",
-      price: 35000,
-      badge: "Great Price",
-      badgeColor: "green",
-      image: explorerImg,
-    },
-  ];
+  const { data, isLoading } = useCars();
+  const navigate = useNavigate();
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 p-8 mt-10">
@@ -168,15 +95,26 @@ const SUVProductGrid = () => {
           <h1 className="text-4xl font-bold text-gray-900">
             The Most Searched SUV Cars
           </h1>
-          <button className="flex items-center gap-2 text-gray-700 font-medium hover:text-gray-900 transition-colors">
+          <button
+            onClick={() => navigate(routes.product.index)}
+            className="flex items-center gap-2 text-gray-700 font-medium hover:text-gray-900 transition-colors cursor-pointer"
+          >
             View All
             <ArrowUpRight className="w-5 h-5" />
           </button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {products.map((product, index) => (
-            <ProductCard key={index} {...product} />
+          {data?.slice(0, 8)?.map((product) => (
+            <ProductCard
+              image={product?.images[0]}
+              title={product.name}
+              subtitle={product.description}
+              fuelType={product.fuel_type}
+              onViewDetails={() => navigate(`/product/${product?.id}`)}
+              key={product.id}
+              {...product}
+            />
           ))}
         </div>
       </div>

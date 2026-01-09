@@ -2,10 +2,11 @@ export interface IProductCard {
   image: string;
   title: string;
   subtitle: string;
-  mileage: string;
+  mileage: number;
   fuelType: string;
   transmission: string;
   price: number;
+  onViewDetails: () => void
   badge?: string;
   badgeColor?: string;
 }
